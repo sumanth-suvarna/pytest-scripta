@@ -1,7 +1,7 @@
 import pytest
 
 
-@pytest.mark.depends(on='test_discovery_status')
+# @pytest.mark.depends(on='test_discovery_status')
 def test_devices():
     assert "devices" == "device", "FAIL: Devices not discovered"
 
