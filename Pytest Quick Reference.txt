@@ -1,0 +1,185 @@
+Pytest to Python is same as TestNG for Java. It is user friendly & has very powerful, easy to use assertion library.
+It is open source, widely used by developers to test Python APIs, but can also be integrated with automation. 
+It also provides support for parallel execution.
+
+
+Install
+	pip install pytest
+	pytest --version
+	
+Packages Requires
+	pytest-depends
+	pytest-html
+	pytest-xdist
+	
+Features
+Write Test Cases
+	1. Following rules needs to be followed while writing test cases in Pytest
+		a. The test case python file should either start with "test" or end with "test". Ex: test_demo1 or demo1_test, test_demo2 or demo2_test
+		b. The test case methods inside python file should also either start with "test" or end with "test"
+			Ex: def test_verify_username or def verify_username_test
+
+Execute Test Cases	
+	1. Run all test cases using below command. This command will run all test case methods inside all test case python files if the above mentioned
+		rules are followed.
+				pytest OR pytest -v
+
+	2. To run all tests under one test case python file, run below command
+				pytest test_demo1.py
+				
+	3. To run a specific test method under a python file, run
+				pytest test_demo1.py::test_login
+				
+	5. To run a specific test method inside a class under a python file, run
+				pytest test_demo1.py::TestDemoClass::test_login
+				
+	6. To run all tests which has "login" as part of it's name under all/any python test case file, run below command
+				pytest -k login -v   ----> v stands for verbose output.
+				
+	7. To get the list of all tests which will be executed by pytest, run below command
+				pytest --collect-only
+	
+	8. Run all tests with verbose and to  print the "print" statements
+				pytest -v -s OR pytest -vs
+				
+Markers/Grouping
+	1. Use below annotation to add a test case to a group(Smoke, Sanity, Regression)
+		@pytest.mark.<group name>
+		Ex:
+		@pytest.mark.sanity
+		def test_demo1:
+			pass
+			
+	2. Run below command to execute all sanity test cases
+			pytest -m sanity -verbose
+			
+	
+	3. You can also add multiple markers for the same test case. Ex:
+		@pytest.mark.smoke
+		@pytest.mark.sanity
+		def test_demo1:
+			pass
+			
+	4. To skip a test case from executing, add @pytest.mark.skip before the test case method.
+	5. Adding such custom markers will result in warnings in the console when the test cases are executed. To avoid such warnings, create a 
+		pytest.ini file at the project level as shown below
+			[pytest]
+			addopts = --strict-markers
+			markers =
+				<marker1>: <optional description>
+				<marker2>: <optional description>
+				
+		Note: Adding "addopts = --strict-markers" in the ini file will prevent the tests from running if any new marker not specified in the 
+			ini file is added to the test case file.
+
+
+Parallel Execution
+	1. Install pytest-xdist package. pip install pytest-xdist
+	2. Execute below command to run tests in parallel mode
+			pytest -n 5     ---> 5 parallel execution
+			pytest -m sanity -n 3 -v  ---> 3 parallel execution of sanity test cases.
+			
+
+Test Case Dependency
+	1. Install pytest-depends package. "pip install pytest-depends"
+	2. Use @pytest.mark.depends(on='<test method name'>) before the test method to make it dependent on another test method.
+	3. Use @pytest.mark.depends(on=['<test method1 name'>, <'test method2 name'>) before the test method to make it dependent on multiple tests.
+	4. Ex:
+		@pytest.mark.depends(on='test_discovery_status')
+		def test_devices():
+			assert "devices" == "device", "FAIL: Devices not discovered"
+
+		def test_discovery_status():
+			print("Discovery Completed")
+			assert "discovery" == "discovery", "FAIL: Discovery Failed"
+			
+	5. The dependent test method will be executed only if specified independent test method is passed. If not, it is skipped.
+	6. In 4, the test case "test_devices" will get executed only if the test case "test_discovery_status" is passed.
+
+Setup & TearDown Modules
+	1. To avoid repeated prerequisite code in every test case, setup_module & teardown_module method is used.
+		Ex: 
+			def setup_module(module):
+				pass
+				
+			def teardown_module(module):
+				pass
+				
+	2. The setup & teardown method names should always be same as shown in above example.
+	3. The setup & teardown method scope is within the python file in which it is defined.
+	4. The setup_module method is executed first & once before executing any of the test methods.
+	5. The teardown_module method is executed at last & once after executing all test methods.
+	
+	
+Fixtures
+	1. Fixture is used as an alternate way to define setup & teardown modules.
+	2. It is also used to define dependent test methods.
+		Ex:
+			@pytest.fixtures(scope='module')
+			def anyname():
+				print("Running before executing any tests")
+				yield
+				print("Running after executing all tests")
+				
+			def test_demo1(anyname):            ----> Either pass fixture method name directly as argument to a function Or
+				pass
+				
+			@fixture.mark.usefixtures("anyname") ------> Use annotation as shown here.
+			def test_demo2():
+				pass
+				
+			
+				
+	3. The fixture method scope is within the python file in which it is defined.
+	4. If scope='module' is specified, then the fixture method is executed only once before test cases execution & after test cases execution.
+	5. If scope='module' is not specified, then the fixture method is executed before & after every test case method that uses it.
+		Ex:
+			@pytest.fixtures()
+			def anyname():
+				print("Running before executing any tests")
+				yield
+				print("Running after executing all tests")
+				
+			def test_demo1(anyname):
+				pass
+				
+			def test_demo2(anyname):
+				pass
+				
+			def test_demo3():
+				pass
+			
+	5. The fixtures can also be used to define prerequisites for couple of test cases if not for all test cases as shown above(5).
+	6. Only those test methods that accept fixture as argument will execute fixture methods as shown above(5)
+	7. To increase fixture scope across multiple python test files, define the fixture inside "conftest.py" python file & use fixture method name
+		as argument to test method or use @fixture.mark.usefixtures annotation.
+		
+	8. To learn more about fixture scope='class', refer https://www.youtube.com/watch?v=FG9CgbPmq_8&list=PLFGoYjJG_fqq2l-8EuBTZJ3lLcOrCNaiH&index=19
+			
+
+HTML Reports
+	1. Install pytest-html package. pip install pytest-html
+	2. Execute below command to run tests & get html reports
+			pytest -v -html=report.html
+			pytest -m sanity -v --html=report.html
+			
+
+Parameterization - Data driven similar to @DataProvider in TestNG
+	1. Use pytest.mark.parametrize annotation as shown below
+	
+		@pytest.mark.parametrize("num, result", [(1, 11), (2, 22), (3, 33)])
+		def test_calculation(num, result):
+			assert num * 11 == result
+			
+	2. Ensure that all parameters are within same quotes. Ex: "num, result" as shown in example above.
+	3. Ensure that values are stored in list. If there are more than one parameters, then values should be stored as list of tuples.
+				
+	
+Assertions
+	1. assert <condition> "<Message if condition fails>"
+Integrate with Selenium
+
+
+
+Tidbits:
+1. pytest-depends package causes pytest to execute in reverse order. Uninstall pytest-depends package to solve the issue.

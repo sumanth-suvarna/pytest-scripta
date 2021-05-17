@@ -1,0 +1,12 @@
+.idea/
+*.log
+*.htm
+*.html
+*.pyc
+*.png
+.pytest_cache/
+reports/reports.html
+assets/
+*.bat
+*.xml
+venv/
