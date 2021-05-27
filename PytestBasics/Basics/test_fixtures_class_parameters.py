@@ -38,13 +38,15 @@ class TestGoogle(DriverBaseTest):
         time.sleep(2)
         assert True
 
-    @pytest.mark.depends(on=['TestGoogle::test_title'])
+    def test_title(self):
+        print("Testing Title")
+        assert self.driver.title == "Google", f"FAIL: Title expected is Google but received {self.driver.title}"
+
+    # @pytest.mark.depends(on=['TestGoogle::test_title'])
     def test_get_url(self):
         print("Testing URL")
         assert self.driver.current_url == "https://www.google.com/?gws_rd=ssl", "FAIL: Current URL expected is " \
                                                                                 "https://www.google1.com/?gws_rd=ssl "\
                                                                                 f"but received {self.driver.current_url}"
 
-    def test_title(self):
-        print("Testing Title")
-        assert self.driver.title == "Google", f"FAIL: Title expected is Google but received {self.driver.title}"
+

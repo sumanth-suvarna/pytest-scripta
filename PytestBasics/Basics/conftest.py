@@ -4,6 +4,20 @@ from webdriver_manager.chrome import ChromeDriverManager
 from webdriver_manager.microsoft import EdgeChromiumDriverManager, IEDriverManager
 
 
+@pytest.fixture(scope='session')
+def started_tests():
+    print("STARTED TEST EXECUTION")
+    yield
+    print("ENDING TEST EXECUTION")
+
+
+@pytest.fixture(scope='session', autouse=True)
+def start_tests():
+    print("STARTING TEST EXECUTION")
+    yield
+    print("ENDED TEST EXECUTION")
+
+
 @pytest.fixture(params=["chrome", "edge"], scope='class')
 def initialize_driver(request):
     print("INITIALIZING DRIVER")
@@ -39,3 +53,8 @@ def get_driver(request):
     print(f"CLOSING DRIVER - {request.param}")
     web_driver.close()
 
+
+@pytest.fixture(scope='module')
+def req_module_context(request):
+    url = getattr(request.module, "url", "www.python.org")
+    return url

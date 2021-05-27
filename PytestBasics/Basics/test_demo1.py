@@ -10,7 +10,7 @@ def teardown_module(module):
 
 
 @pytest.mark.sanity
-def test_username():
+def test_username(started_tests):
     assert "sumanth" == "sumanth", "FAIL: Username is invalid"
     print("End Of Test")
 

@@ -3,17 +3,17 @@ import pytest
 
 @pytest.fixture(params=["apple", "mango", "banana"], scope="class")
 def fruits(request):
-    print("Executing Fixture")
+    print("Executing Fixture - Class")
     request.cls.fruits = request.param
     yield request.param
-    print("Terminating Fixture")
+    print("Terminating Fixture - Class")
 
 
 @pytest.fixture(params=["apple", "mango", "banana"], scope="module")
 def fruit(request):
-    print("Executing Fixture")
+    print("Executing Fixture - Module")
     yield request.param
-    print("Terminating Fixture")
+    print("Terminating Fixture - Module")
 
 
 def test_small_fruit(fruit):
@@ -43,7 +43,7 @@ class TestFruits(BaseTest):
         print(f"Small fruit is: {self.fruits}")
         assert True
 
-    @pytest.mark.depends(on=["TestFruits::test_large_fruit"])
+    # @pytest.mark.depends(on=["TestFruits::test_large_fruit"])
     def test_medium_fruit(self):
         print(f"Medium fruit is: {self.fruits}")
         assert True

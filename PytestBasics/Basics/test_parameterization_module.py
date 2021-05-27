@@ -3,7 +3,7 @@ import time
 import pytest
 
 
-@pytest.mark.order(1)
+# @pytest.mark.order(1)
 def test_google(get_driver):
     web_driver = get_driver
     web_driver.get("https://www.google.com")
@@ -18,7 +18,7 @@ def test_google(get_driver):
                                 "Python"
                             ]
                         )
-@pytest.mark.order(2)
+# @pytest.mark.order(2)
 def test_search(get_driver, search):
     web_driver = get_driver
     web_driver.find_element_by_name("q").send_keys(search)
