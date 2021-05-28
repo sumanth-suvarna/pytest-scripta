@@ -12,14 +12,14 @@ def setup():
 # @pytest.mark.depends(on='test_discovery_status')
 def test_devices(setup):
     print(setup)
-    assert "device" == "device", "FAIL: Devices not discovered"
+    assert "devices" == "device", "FAIL: Devices not discovered"
 
 
 @pytest.mark.sanity
 def test_discovery_status(setup):
     print(setup)
     print("Discovery Completed")
-    assert "discovery" == "discovery", "FAIL: Discovery Failed"
+    assert "discover" == "discovery", "FAIL: Discovery Failed"
 
 
 def test_all_is_well():
