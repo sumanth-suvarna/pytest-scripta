@@ -19,7 +19,7 @@ def test_devices(setup):
 def test_discovery_status(setup):
     print(setup)
     print("Discovery Completed")
-    assert "discovery" == "discovery", "FAIL: Discovery Failed"
+    assert "discover" == "discovery", "FAIL: Discovery Failed"
 
 
 def test_all_is_well():
@@ -29,5 +29,5 @@ def test_all_is_well():
 
 def test_better_is_well():
     print("Better is Well")
-    assert False
+    assert True
 
